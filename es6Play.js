@@ -238,59 +238,57 @@ describe('iterators', function(){
          Now, who drinks water? Who owns the zebra?
 
          solution:
-         Englishman: 3
-         Japanese: 5
-         Norwegien: 1
-         Spanish: 4
-         Ukranian: 2
-         Water: 1
-         Zebra: 5
+         The Norwegien drinks the water.  The Japanese owns the zebra
 
-         Norwegien drinks the water.  The Japanese owns the zebra
-         
          */
 
         let five = [1,2,3,4,5];
         let gen = (
             for ([english,spanish,norwegien,japanese,ukranian] of  permutations2(five))
             if (norwegien == 1)
+
+            for ([oldgold,chesterfields,parliaments,kools,luckys] of  permutations2(five))
+            if (japanese == parliaments)
+
             for ([red,green,yellow,blue,ivory] of  permutations2(five))
+            if (kools == yellow)
             if (english == red)
-            if (ivory != 5)
             if (green == (ivory + 1))
+            if (ivory != 5)
+            if (Math.abs(norwegien - blue) == 1)
 
             for ([dog,fox,zebra,horse,snails] of  permutations2(five))
             if (dog == spanish)
-            for ([coffee,milk,juice,water,tea] of  permutations2(five))
-            if (milk == 3)
-            if (coffee == green && tea == ukranian)
-            for ([oldgold,chesterfields,parliaments,kools,luckys] of  permutations2(five))
             if (oldgold == snails)
-            if (kools == yellow)
             if (Math.abs(chesterfields - fox) == 1)
             if (Math.abs(kools - horse) == 1)
+
+            for ([coffee,milk,juice,water,tea] of  permutations2(five))
+            if (milk == 3)
+            if (coffee == green)
+            if (tea == ukranian)
             if (luckys == juice)
-            if (japanese == parliaments)
-            if (Math.abs(norwegien - blue) == 1)
 
             {
                 Water: water,
                 Zebra: zebra,
-                Englishman: english,
-                Spanish: spanish,
-                Norwegien: norwegien,
-                Japanese: japanese,
-                Ukranian: ukranian
+                Men: new Map([
+                                [english,"Englishman"],
+                                [spanish,"Spaniard"],
+                                [norwegien,"Norwegien"],
+                                [japanese,"Japanese"],
+                                [ukranian,"Ukranian"]
+                            ])
             }
         );
 
-        let count = 0;
         for (let v of gen) {
-            console.log(v);
-            count += 1;
-            break;
+            console.log("The %s drinks the water", v.Men.get(v.Water));
+            console.log("The %s owns the zebra", v.Men.get(v.Zebra));
+
+            expect(v.Men.get(v.Water)).toEqual("Norwegien");
+            expect(v.Men.get(v.Zebra)).toEqual("Japanese");
         }
-        expect(count).toBe(1);
     });
 });
 
