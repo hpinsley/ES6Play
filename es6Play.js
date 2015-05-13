@@ -1,3 +1,5 @@
+import * as codeLib from './code.js'
+
 describe('sets', function(){
     it ('should have zero elements upon construction', function() {
         var set = new Set();
@@ -144,12 +146,6 @@ describe('iterators', function(){
         expect(a3).toEqual([1,2,3,4,5,6]);
     });
 
-    Array.prototype.remove = function(i) {
-        let copy = this.slice(0);
-        copy.splice(i,1);
-        return copy;
-    }
-
     it('can use remove method on array', function(){
         var arr = [1,2,3];
         var extract = arr.remove(1);
@@ -242,6 +238,8 @@ describe('iterators', function(){
 
          */
 
+        expect(true).toBe(true);
+        return;                     //Take this out to execute.  This is long running (a few seconds)
         let five = [1,2,3,4,5];
         let gen = (
             for ([english,spanish,norwegien,japanese,ukranian] of  permutations2(five))
@@ -341,4 +339,84 @@ describe('classes', function(){
         expect(howard.Name).toEqual("Howard");
 
     });
+});
+
+describe('promises', function(){
+    it ('can construct a promise and return data', function(done){
+        var promise = new Promise(function(resolve, reject){
+            resolve(1);
+        });
+
+        promise.then(function(result){
+            expect(result).toBe(1);
+            done();
+        });
+
+    });
+
+    it ('can reject and catch', function(done){
+        var promise = new Promise(function(resolve, reject){
+            reject(Error("Fail"));
+        });
+
+        promise.catch(function(err){
+            expect(err.message).toBe("Fail");
+            done();
+        });
+
+    });
+
+    it ('can resolve with a promise', function(done){
+        var previousPromise = new Promise(function(resolve, reject){
+            resolve(1);
+        });
+        var promise = new Promise(function(resolve, reject){
+            resolve(previousPromise);
+        });
+
+        promise.then(function(data){
+            expect(data).toBe(1);
+            done();
+        });
+
+    });
+
+    it ('should have a static resolve', function(done){
+        var promise = Promise.resolve(1);
+
+        promise.then(function(data){
+            expect(data).toBe(1);
+            done();
+        });
+
+    });
+
+    it ('callback in Promise constructor runs async', function(done){
+
+        let async = false;
+
+        var promise = new Promise(function(resolve, reject){
+            resolve();
+        });
+
+        promise.then(function(){
+            expect(async).toBe(true);
+            done();
+        });
+
+        async = true;
+    });
+
+    it ('should chain sequentially', function(done){
+        codeLib.getOrder(3).then(function(order){
+            return codeLib.getUser(order.userId);
+        }).then(function(user){
+            return codeLib.getCompany(user.companyId);
+        }).then(function(company){
+            expect(company.name).toBe("Pluralsight");
+            done();
+        }).catch(function(err){
+        });
+    });
+
 });
