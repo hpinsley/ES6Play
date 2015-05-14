@@ -214,7 +214,9 @@ describe('iterators', function(){
         expect(count).toBe(24);
     });
 
-    it ('can solve the Einstein puzzle with iterator permuations', function(){
+    //xit is like a disabled test.
+
+    xit ('can solve the Einstein puzzle with iterator permuations', function(){
         /*
          There are five houses.
          The Englishman lives in the red house.
@@ -238,8 +240,6 @@ describe('iterators', function(){
 
          */
 
-        expect(true).toBe(true);
-        return;                     //Take this out to execute.  This is long running (a few seconds)
         let five = [1,2,3,4,5];
         let gen = (
             for ([english,spanish,norwegien,japanese,ukranian] of  permutations2(five))
@@ -416,7 +416,34 @@ describe('promises', function(){
             expect(company.name).toBe("Pluralsight");
             done();
         }).catch(function(err){
+            fail("Caught unexpected error: " + (err.message || err));
+            done();
         });
     });
 
+    it ('should execute after all promises when using all', function(done){
+        let courseIds = [1,2,3];
+        let promises = [];
+        for (let id of courseIds.values()) {            //Notice that I need Array.values() here
+            promises.push(codeLib.getCourse(id));
+        }
+        Promise.all(promises)
+            .then(function(vals) {
+                expect(vals.length).toBe(3);
+                done();
+            });
+    });
+
+    it ('should resolve to first when using race', function(done){
+        let courseIds = [1,2,3];
+        let promises = [];
+        for (let id of courseIds.values()) {            //Notice that I need Array.values() here
+            promises.push(codeLib.getCourse(id));
+        }
+        Promise.race(promises)
+            .then(function(val) {
+                expect(val.name).toBeDefined();
+                done();
+            });
+    });
 });

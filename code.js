@@ -15,3 +15,13 @@ export function getUser(userId) {
 export function getCompany(companyId) {
     return Promise.resolve({name: "Pluralsight"});
 }
+
+export function getCourse(courseId) {
+    var courses = {
+        1: { name: 'Course 1'},
+        2: { name: 'Course 2'},
+        3: { name: 'Course 3'}
+    };
+
+    return Promise.resolve(courses[courseId]);
+}
